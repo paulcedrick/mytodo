@@ -7,15 +7,26 @@ export const TodoRoutes = new Hono();
 
 const todoRepository = new TodoRepository();
 
+const getAllTodoQueries = z.object({
+  limit: z.coerce.number().optional(),
+  offset: z.coerce.number().optional(),
+  order: z.enum(["asc", "desc"]).optional(),
+});
 TodoRoutes.get("/", async (c) => {
   try {
-    const limit = Number(c.req.query("limit"));
-    const offset = Number(c.req.query("offset"));
+    const parseResult = getAllTodoQueries.safeParse(c.req.query());
 
-    const pagination =
-      Number.isInteger(limit) && Number.isInteger(offset)
-        ? { limit, offset }
-        : undefined;
+    if (!parseResult.success) {
+      return c.json({ error: parseResult.error }, 400);
+    }
+
+    const queries = parseResult.data;
+
+    let limit = queries.limit ?? 10;
+    let offset = queries.offset ?? 0;
+    let order = queries.order ?? "asc";
+
+    const pagination = { limit, offset, order };
 
     const todos = await todoRepository.getAll(pagination);
 

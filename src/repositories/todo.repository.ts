@@ -35,10 +35,22 @@ export class TodoRepository implements IBaseRepository<Todo> {
     return todo;
   }
 
-  async getAll(opts?: { limit?: number; offset?: number }): Promise<Todo[]> {
+  async getAll(opts?: {
+    limit?: number;
+    offset?: number;
+    order?: "asc" | "desc";
+  }): Promise<Todo[]> {
     if (opts) {
       const limit = opts.limit ?? 10;
       const offset = opts.offset ?? 0;
+      const order = opts.order ?? "asc";
+
+      if (order === "desc") {
+        return this.todos
+          .slice()
+          .reverse()
+          .slice(offset, offset + limit);
+      }
 
       return this.todos.slice(offset, offset + limit);
     }
