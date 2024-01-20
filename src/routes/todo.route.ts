@@ -35,7 +35,7 @@ TodoRoutes.get("/:id", async (c) => {
 
 export const createTodoSchema = z.object({
   title: z.string().min(1).max(255),
-  description: z.string().min(1).max(255),
+  description: z.string().min(1).optional(),
   isDone: z.boolean().optional().default(false),
 });
 TodoRoutes.post("/", zValidator("json", createTodoSchema), async (c) => {
@@ -52,7 +52,7 @@ TodoRoutes.post("/", zValidator("json", createTodoSchema), async (c) => {
 
 export const updateTodoSchema = z.object({
   title: z.string().min(1).max(255),
-  description: z.string().min(1).max(255),
+  description: z.string().min(1).optional(),
   isDone: z.boolean(),
 });
 TodoRoutes.put("/:id", zValidator("json", updateTodoSchema), async (c) => {
