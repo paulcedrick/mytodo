@@ -4,7 +4,7 @@
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "target": "ESNext",
-    "moduleResolution": "NodeNext"
+    "module": "esnext",
+    "moduleResolution": "node"
   }
 }
