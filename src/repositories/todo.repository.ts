@@ -34,7 +34,14 @@ export class TodoRepository implements IBaseRepository<Todo> {
     return todo;
   }
 
-  async getAll(): Promise<Todo[]> {
+  async getAll(opts?: { limit?: number; offset?: number }): Promise<Todo[]> {
+    if (opts) {
+      const limit = opts.limit ?? 10;
+      const offset = opts.offset ?? 0;
+
+      return this.todos.slice(offset, offset + limit);
+    }
+
     return this.todos;
   }
 

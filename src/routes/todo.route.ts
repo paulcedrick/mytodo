@@ -9,7 +9,15 @@ const todoRepository = new TodoRepository();
 
 TodoRoutes.get("/", async (c) => {
   try {
-    const todos = await todoRepository.getAll();
+    const limit = Number(c.req.query("limit"));
+    const offset = Number(c.req.query("offset"));
+
+    const pagination =
+      Number.isInteger(limit) && Number.isInteger(offset)
+        ? { limit, offset }
+        : undefined;
+
+    const todos = await todoRepository.getAll(pagination);
 
     return c.json({ data: todos });
   } catch (err: unknown) {
