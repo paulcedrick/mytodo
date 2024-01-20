@@ -2,12 +2,13 @@ import { ulid } from "ulid";
 import { Todo } from "../models/todo.model";
 import { IBaseRepository } from "./base.repository";
 
+type InsertTodoPayload = Omit<Todo, "id" | "updatedAt" | "createdAt">;
 export class TodoRepository implements IBaseRepository<Todo> {
   private todos: Todo[] = [];
 
   constructor() {}
 
-  async update(id: string, payload: Omit<Todo, "id">): Promise<Todo | null> {
+  async update(id: string, payload: InsertTodoPayload): Promise<Todo | null> {
     const todo = this.todos.find((todo) => todo.id === id);
 
     if (!todo) return null;
@@ -55,9 +56,7 @@ export class TodoRepository implements IBaseRepository<Todo> {
     return todo;
   }
 
-  async create(
-    todo: Omit<Todo, "id" | "updatedAt" | "createdAt">
-  ): Promise<Todo> {
+  async create(todo: InsertTodoPayload): Promise<Todo> {
     const newTodo = {
       ...todo,
       id: ulid(),
