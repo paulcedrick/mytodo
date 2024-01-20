@@ -12,7 +12,11 @@ export class TodoRepository implements IBaseRepository<Todo> {
 
     if (!todo) return null;
 
-    const updatedTodo = { ...todo, ...payload };
+    const updatedTodo = {
+      ...todo,
+      ...payload,
+      updatedAt: Date.now().toString(),
+    };
 
     this.todos = this.todos.map((todo) =>
       todo.id === id ? updatedTodo : todo
@@ -44,8 +48,15 @@ export class TodoRepository implements IBaseRepository<Todo> {
     return todo;
   }
 
-  async create(todo: Omit<Todo, "id">): Promise<Todo> {
-    const newTodo = { ...todo, id: ulid() };
+  async create(
+    todo: Omit<Todo, "id" | "updatedAt" | "createdAt">
+  ): Promise<Todo> {
+    const newTodo = {
+      ...todo,
+      id: ulid(),
+      createdAt: Date.now().toString(),
+      updatedAt: undefined,
+    };
 
     this.todos.push(newTodo);
 
